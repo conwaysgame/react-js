@@ -12,6 +12,9 @@ class GameOfLife extends Component {
       width: props.width,
       height: props.height,
       worldSize: props.width * props.height,
+      populatedCells: (props.startingPopulation || []).map((cell) => {
+        return cell[0] + (cell[1] * props.width);
+      }),
     };
   }
 
@@ -19,7 +22,11 @@ class GameOfLife extends Component {
     const worldSize = this.state.width * this.state.height;
     let cells = [];
     for (let i = 0; i < worldSize; i++) {
-      cells.push(<Cell key={"cell-" + i} />);
+      const props = {};
+      if (this.state.populatedCells.includes(i)) {
+        props.populated = true;
+      }
+      cells.push(<Cell key={"cell-" + i} {...props} />);
     }
     return (
       <div className="GameOfLife">

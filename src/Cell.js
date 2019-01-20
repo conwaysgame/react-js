@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Cell extends Component {
   render() {
@@ -8,5 +9,13 @@ class Cell extends Component {
     );
   }
 }
+
+Cell.propTypes = {
+    populated: PropTypes.boolean,
+};
+
+Cell.defaultProps = {
+    populated: false
+};
 
 export default Cell;
