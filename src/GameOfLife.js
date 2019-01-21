@@ -56,6 +56,14 @@ class GameOfLife extends Component {
     if (this.props.generation !== prevProps.generation) {
       this.setState({ generation: this.props.generation });
     }
+    if (this.props.started !== prevProps.started) {
+      this.setState({ started: this.props.started });
+    }
+    if (this.state.started === true && !prevState.started) {
+      setTimeout(() => {
+        this.setState({ generation: this.state.generation + 1 })
+      }, 100);
+    }
     if (this.state.generation !== prevState.generation) {
       let populatedCellsToProgress = this.state.populatedCells;
       for (let gen = prevState.generation + 1; gen <= this.state.generation; gen++) {
@@ -65,9 +73,27 @@ class GameOfLife extends Component {
       if (this.state.started) {
         setTimeout(() => {
           this.setState({ generation: this.state.generation + 1 })
-        }, 500);
+        }, 100);
       }
     }
+  }
+
+  toggleCell(cellIndexValue) {
+    if (this.state.populatedCells.includes(cellIndexValue)) {
+      this.setState({
+        populatedCells: this.state.populatedCells.filter(value => value !== cellIndexValue),
+      });
+    } else {
+      this.setState({
+        populatedCells: [...this.state.populatedCells, cellIndexValue],
+      });
+    }
+  }
+
+  toggleGame() {
+    this.setState({
+      started: !this.state.started,
+    });
   }
 
   render() {
@@ -78,7 +104,9 @@ class GameOfLife extends Component {
       if (this.state.populatedCells.includes(i)) {
         props.populated = true;
       }
-      cells.push(<Cell key={"cell-" + i} {...props} />);
+      cells.push(<Cell key={"cell-" + i} onClick={(() => {
+        this.toggleCell(i);
+      }).bind(this)} {...props} />);
     }
 
     const style = {
@@ -87,8 +115,13 @@ class GameOfLife extends Component {
     };
 
     return (
-      <div className="GameOfLife" style={style}>
-        {cells}
+      <div>
+        <div className="GameOfLife" style={style}>
+          {cells}
+        </div>
+        <div className="ControlPanel">
+          <button onClick={this.toggleGame.bind(this)}>{this.state.started ? 'Pause' : 'Start'}</button>
+        </div>
       </div>
     );
   }

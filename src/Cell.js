@@ -9,7 +9,7 @@ class Cell extends Component {
       'populated': this.props.populated
     });
     return (
-      <div className={cellClass}>
+      <div className={cellClass} onClick={this.props.onClick}>
       </div>
     );
   }
