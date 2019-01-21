@@ -17,6 +17,18 @@
   padding:0;
 }
 
+.Cell:hover {
+  background-color:#777;
+}
+
 .Cell.populated {
   background:black;
+}
+
+.Cell.populated:hover {
+  background-color:#f20000;
+  background-image:url(./skull.svg);
+  background-position: right;
+  background-repeat: no-repeat;
+  background-size:cover;
 }
