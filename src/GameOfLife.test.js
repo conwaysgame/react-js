@@ -66,7 +66,7 @@ describe('when the population is specified in props and then stepped', () => {
     deadCells.should.have.lengthOf(11);
   });
 
-  it('should change the population when the generation changes', () => {
+  it('should change the population when the generation changes by 1', () => {
     /*
     oooo
     xoxo
@@ -88,6 +88,35 @@ describe('when the population is specified in props and then stepped', () => {
     cellAt12.props().populated.should.equal(true);
     cellAt22.props().populated.should.equal(true);
     cellAt13.props().populated.should.equal(true);
+
+    const deadCells = wrapper.findWhere(cell => cell.props().populated === false);
+    const cellAt11 = allCells.at(5); // 1, 1 is at 5
+    cellAt11.props().populated.should.equal(false);
+    deadCells.should.have.lengthOf(11);
+  });
+
+  it('should change the population when the generation changes by 2', () => {
+    /*
+    oooo
+    ooxo
+    xoxo
+    oxxo
+    [6, 8, 10, 13, 14]
+    */
+    wrapper.setProps({ generation: 2 });
+    wrapper.update();
+    allCells = wrapper.find(Cell);
+    allCells.should.have.lengthOf(16);
+    const cellAt21 = allCells.at(6);
+    const cellAt02 = allCells.at(8);
+    const cellAt22 = allCells.at(10);
+    const cellAt13 = allCells.at(13);
+    const cellAt23 = allCells.at(14);
+    cellAt21.props().populated.should.equal(true);
+    cellAt02.props().populated.should.equal(true);
+    cellAt22.props().populated.should.equal(true);
+    cellAt13.props().populated.should.equal(true);
+    cellAt23.props().populated.should.equal(true);
 
     const deadCells = wrapper.findWhere(cell => cell.props().populated === false);
     const cellAt11 = allCells.at(5); // 1, 1 is at 5

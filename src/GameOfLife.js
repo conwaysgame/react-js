@@ -46,8 +46,10 @@ class GameOfLife extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.generation !== prevProps.generation) {
+      let populatedCellsToProgress = this.state.populatedCells;
       for (let gen = prevProps.generation + 1; gen <= this.props.generation; gen++) {
-        this.setState({ populatedCells: this.getPopulatedCellsAfter(this.state.populatedCells) });
+        populatedCellsToProgress = this.getPopulatedCellsAfter(populatedCellsToProgress)
+        this.setState({ populatedCells: populatedCellsToProgress });
       }
     }
   }
