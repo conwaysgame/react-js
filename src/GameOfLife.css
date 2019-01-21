@@ -1,32 +1,22 @@
 .GameOfLife {
-  text-align: center;
+  text-align: left;
+  border-right:1px solid black;
+  border-bottom:1px solid black;
+  line-height:0;
 }
 
-.GameOfLife-logo {
-  animation: GameOfLife-logo-spin infinite 20s linear;
-  height: 40vmin;
+.Cell {
+  display:inline-block;
+  width:20px;
+  height:20px;
+  box-sizing:border-box;
+  border:1px solid black;
+  border-right:none;
+  border-bottom:none;
+  margin:0;
+  padding:0;
 }
 
-.GameOfLife-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.GameOfLife-link {
-  color: #61dafb;
-}
-
-@keyframes GameOfLife-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Cell.populated {
+  background:black;
 }

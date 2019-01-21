@@ -4,7 +4,8 @@ import './index.css';
 import GameOfLife from './GameOfLife';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<GameOfLife />, document.getElementById('root'));
+const gliderPopulation = [[1, 0],[2, 1],[0, 2],[1, 2],[2, 2],]
+ReactDOM.render(<GameOfLife width={20} height={7} startingPopulation={gliderPopulation} start={true} />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

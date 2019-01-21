@@ -10,6 +10,8 @@ class GameOfLife extends Component {
     this.state = {
       width: props.width,
       height: props.height,
+      generation: props.generation,
+      started: props.start,
       worldSize: props.width * props.height,
       populatedCells: (props.startingPopulation || []).map((cell) => {
         return cell[0] + (cell[1] * props.width);
@@ -44,12 +46,26 @@ class GameOfLife extends Component {
     return newPopulatedCells;
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidMount() {
+    if (this.state.started) {
+      setTimeout(this.setState({ generation: this.state.generation + 1 }), 1000);
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     if (this.props.generation !== prevProps.generation) {
+      this.setState({ generation: this.props.generation });
+    }
+    if (this.state.generation !== prevState.generation) {
       let populatedCellsToProgress = this.state.populatedCells;
-      for (let gen = prevProps.generation + 1; gen <= this.props.generation; gen++) {
+      for (let gen = prevState.generation + 1; gen <= this.state.generation; gen++) {
         populatedCellsToProgress = this.getPopulatedCellsAfter(populatedCellsToProgress)
         this.setState({ populatedCells: populatedCellsToProgress });
+      }
+      if (this.state.started) {
+        setTimeout(() => {
+          this.setState({ generation: this.state.generation + 1 })
+        }, 500);
       }
     }
   }
@@ -64,8 +80,14 @@ class GameOfLife extends Component {
       }
       cells.push(<Cell key={"cell-" + i} {...props} />);
     }
+
+    const style = {
+      display: 'block',
+      width: this.state.width * 20,
+    };
+
     return (
-      <div className="GameOfLife">
+      <div className="GameOfLife" style={style}>
         {cells}
       </div>
     );
@@ -76,10 +98,12 @@ GameOfLife.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number,
   generation: PropTypes.number,
+  start: PropTypes.bool,
 }
 
 GameOfLife.defaultProps = {
   generation: 0,
+  start: false,
 }
 
 export default GameOfLife;
