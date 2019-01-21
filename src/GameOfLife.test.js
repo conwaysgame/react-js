@@ -125,3 +125,37 @@ describe('when the population is specified in props and then stepped', () => {
   });
 });
 
+describe('when grid behaviour is marquee', () => {
+  let game, wrapper;
+
+  beforeAll(() => {
+    const div = document.createElement('div');
+    const population = [[0, 0], [0, 1], [0, 2],];
+    game = <GameOfLife width={4} height={4} startingPopulation={population} border='marquee' />;
+    wrapper = mount(game);
+  });
+
+  it('should put a triomino line which is cut off to the other side on generation increment', () => {
+    /*
+    xooo     oooo
+    xooo --> xxox
+    xooo     oooo
+    oooo     oooo
+    */
+    let allCells = wrapper.find(Cell);
+    allCells.should.have.lengthOf(16);
+    allCells.at(0).props().populated.should.equal(true);
+    allCells.at(4).props().populated.should.equal(true);
+    allCells.at(8).props().populated.should.equal(true);
+    wrapper.setProps({ generation: 1 });
+    wrapper.update();
+    allCells = wrapper.find(Cell);
+    allCells.should.have.lengthOf(16);
+    allCells.at(4).props().populated.should.equal(true);
+    allCells.at(5).props().populated.should.equal(true);
+    allCells.at(7).props().populated.should.equal(true);
+
+    const deadCells = wrapper.findWhere(cell => cell.props().populated === false);
+    deadCells.should.have.lengthOf(13);
+  });
+});

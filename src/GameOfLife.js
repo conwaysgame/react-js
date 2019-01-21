@@ -16,6 +16,44 @@ class GameOfLife extends Component {
       populatedCells: (props.startingPopulation || []).map((cell) => {
         return cell[0] + (cell[1] * props.width);
       }),
+      border: this.props.border,
+    };
+  }
+
+  cellIsPopulated(populatedCells, x, y) {
+    let cellIndex = x + (y * this.state.width);
+    return populatedCells.includes(cellIndex);
+  }
+
+  getAdjacentCellIndices(x, y) {
+    let left = x - 1;
+    let right = x + 1;
+    if (this.state.border === 'marquee') {
+      if (left < 0) {
+        left = this.state.width - 1;
+      }
+      if (right >= this.state.width) {
+        right = 0;
+      }
+    } else {
+      right = Math.min(this.state.width - 1, x + 1);
+    }
+
+    let top = y - 1;
+    let bottom = y + 1;
+    if (this.state.border === 'marquee') {
+      if (bottom >= this.state.height) {
+        bottom = 0;
+      }
+      if (top < 0) {
+        top = this.state.height - 1;
+      }
+    } else {
+      bottom = Math.min(this.state.height - 1, y + 1);
+    }
+
+    return {
+      top, right, bottom, left,
     };
   }
 
@@ -25,8 +63,14 @@ class GameOfLife extends Component {
       for (let y = 0; y < this.state.height; y++) {
         const currentCellIndex = x + (y * this.state.width);
         let numberOfPopulatedNeighbours = 0;
-        for (let nx = x - 1; nx <= Math.min(this.state.width - 1, x + 1); nx++) {
-          for (let ny = y - 1; ny <= Math.min(this.state.height - 1, y + 1); ny++) {
+        // let cellRight = x + 1 >= this.state.width ? 0 : x + 1;
+        // let cellBelow = y + 1 >= this.state.height ? 0 : y + 1;
+        const { top, right, bottom, left } = this.getAdjacentCellIndices(x, y);
+        let xOptions = x === right ? [left, x] : [left, x, right];
+        let yOptions = y === bottom ? [top, y] : [top, y, bottom];
+
+        for (let nx of xOptions) {
+          for (let ny of yOptions) {
             let cellIndex = nx + (ny * this.state.width);
             let populated = populatedCells.includes(cellIndex);
             if ((nx !== x || ny !== y) && populated) {
@@ -132,11 +176,14 @@ GameOfLife.propTypes = {
   height: PropTypes.number,
   generation: PropTypes.number,
   start: PropTypes.bool,
+  gridBehaviour: PropTypes.bool,
+  border: PropTypes.oneOf(['hard', 'marquee']),
 }
 
 GameOfLife.defaultProps = {
   generation: 0,
   start: false,
+  border: 'hard',
 }
 
 export default GameOfLife;
