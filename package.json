@@ -1,6 +1,6 @@
 {
-  "name": "js-react",
-  "version": "0.1.0",
+  "name": "conways-game-react-js",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "chai": "^4.2.0",
