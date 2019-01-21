@@ -11,11 +11,11 @@ class Cell extends Component {
 }
 
 Cell.propTypes = {
-    populated: PropTypes.boolean,
+  populated: PropTypes.bool,
 };
 
 Cell.defaultProps = {
-    populated: false
+  populated: false
 };
 
 export default Cell;

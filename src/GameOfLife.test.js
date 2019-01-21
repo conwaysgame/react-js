@@ -18,14 +18,27 @@ it('contains 16 squares on a 4x4 game', () =>{
   wrapper.find(Cell).should.have.lengthOf(16);
 });
 
-describe('when the population is specified in props', () => {
+it('should fill cell 7 for [3, 1]', () => {
+  const div = document.createElement('div');
+  const population = [[3, 1],]
+  const game = <GameOfLife width={4} height={4} startingPopulation={population} />;
+  const wrapper = mount(game);
+  const allCells = wrapper.find(Cell);
+  const cellAt31 = allCells.at(7); // 3, 1 is at 7
+  const cellAt22 = allCells.at(10); // 2, 2 is at 10
+  cellAt31.props().populated.should.equal(true);
+  cellAt22.props().populated.should.equal(false);
+});
+
+describe('when the population is specified in props and then stepped', () => {
   /*
   oxoo
-  oox0
-  xxx0
-  0000
+  ooxo
+  xxxo
+  oooo
+  [1, 6, 8, 9, 10]
   */
-  let wrapper, allCells;
+  let wrapper, allCells, game;
   beforeAll(() => {
     const div = document.createElement('div');
     const gliderPopulation = [[1, 0],[2, 1],[0, 2],[1, 2],[2, 2],]
@@ -34,7 +47,7 @@ describe('when the population is specified in props', () => {
     allCells = wrapper.find(Cell);
   });
 
-  it('should make the three specified items have the populated prop', () => {
+  it('should make only the three specified items have the populated prop', () => {
     allCells.should.have.lengthOf(16);
     const cellAt10 = allCells.at(1); // 0, 0 is at 0
     const cellAt21 = allCells.at(6); // 2, 1 is at 6
@@ -46,9 +59,36 @@ describe('when the population is specified in props', () => {
     cellAt02.props().populated.should.equal(true);
     cellAt12.props().populated.should.equal(true);
     cellAt22.props().populated.should.equal(true);
+
+    const deadCells = wrapper.findWhere(cell => cell.props().populated === false);
+    const cellAt11 = allCells.at(5); // 1, 1 is at 5
+    cellAt11.props().populated.should.equal(false);
+    deadCells.should.have.lengthOf(11);
   });
 
-  it('should not populate the other cells', () => {
+  it('should change the population when the generation changes', () => {
+    /*
+    oooo
+    xoxo
+    oxxo
+    oxoo
+    [4, 6, 9, 10, 13]
+    */
+    wrapper.setProps({ generation: 1 });
+    wrapper.update();
+    allCells = wrapper.find(Cell);
+    allCells.should.have.lengthOf(16);
+    const cellAt01 = allCells.at(4);
+    const cellAt21 = allCells.at(6);
+    const cellAt12 = allCells.at(9);
+    const cellAt22 = allCells.at(10);
+    const cellAt13 = allCells.at(13);
+    cellAt01.props().populated.should.equal(true);
+    cellAt21.props().populated.should.equal(true);
+    cellAt12.props().populated.should.equal(true);
+    cellAt22.props().populated.should.equal(true);
+    cellAt13.props().populated.should.equal(true);
+
     const deadCells = wrapper.findWhere(cell => cell.props().populated === false);
     const cellAt11 = allCells.at(5); // 1, 1 is at 5
     cellAt11.props().populated.should.equal(false);
