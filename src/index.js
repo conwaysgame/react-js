@@ -6,11 +6,12 @@ import * as serviceWorker from './serviceWorker';
 
 const gliderPopulation = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2],]
 ReactDOM.render(<GameOfLife
-    width={10}
-    height={10}
+    width={20}
+    height={20}
     startingPopulation={gliderPopulation}
     start={true}
     border='marquee'
+    cellWidth={10}
 />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

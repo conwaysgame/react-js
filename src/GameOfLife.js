@@ -25,7 +25,7 @@ class GameOfLife extends Component {
     return populatedCells.includes(cellIndex);
   }
 
-  getAdjacentCellIndices(x, y) {
+  getAdjacentCellCoordinates(x, y) {
     let left = x - 1;
     let right = x + 1;
     if (this.state.border === 'marquee') {
@@ -59,13 +59,22 @@ class GameOfLife extends Component {
 
   getPopulatedCellsAfter(populatedCells) {
     let newPopulatedCells = [];
+    // TODO: Make this more efficient. The smallest
+    // number that it could possibly be be is the
+    // smallest in the pop. cells minus (width + 1)
+    // and the biggest is the biggest in pop. cells
+    // plus (width + 1). But need to take marquee borders
+    // into account. Could do a for (let x of candidates(populatedCells))
+    // to make a shortlist. Or could go through each populated cell,
+    // go through each neighbour, then add it to the "checked it"
+    // list - this is definitely more efficient
     for (let x = 0; x < this.state.width; x++) {
       for (let y = 0; y < this.state.height; y++) {
         const currentCellIndex = x + (y * this.state.width);
         let numberOfPopulatedNeighbours = 0;
         // let cellRight = x + 1 >= this.state.width ? 0 : x + 1;
         // let cellBelow = y + 1 >= this.state.height ? 0 : y + 1;
-        const { top, right, bottom, left } = this.getAdjacentCellIndices(x, y);
+        const { top, right, bottom, left } = this.getAdjacentCellCoordinates(x, y);
         let xOptions = x === right ? [left, x] : [left, x, right];
         let yOptions = y === bottom ? [top, y] : [top, y, bottom];
 
@@ -144,7 +153,7 @@ class GameOfLife extends Component {
     const worldSize = this.state.width * this.state.height;
     let cells = [];
     for (let i = 0; i < worldSize; i++) {
-      const props = { populated: false };
+      const props = { populated: false, width: this.props.cellWidth };
       if (this.state.populatedCells.includes(i)) {
         props.populated = true;
       }
@@ -155,7 +164,7 @@ class GameOfLife extends Component {
 
     const style = {
       display: 'block',
-      width: this.state.width * 20,
+      width: this.state.width * this.props.cellWidth,
     };
 
     return (
@@ -178,12 +187,14 @@ GameOfLife.propTypes = {
   start: PropTypes.bool,
   gridBehaviour: PropTypes.bool,
   border: PropTypes.oneOf(['hard', 'marquee']),
+  cellWidth: PropTypes.number,
 }
 
 GameOfLife.defaultProps = {
   generation: 0,
   start: false,
   border: 'hard',
+  cellWidth: 20,
 }
 
 export default GameOfLife;
