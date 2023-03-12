@@ -157,9 +157,9 @@ class GameOfLife extends Component {
       if (this.state.populatedCells.includes(i)) {
         props.populated = true;
       }
-      cells.push(<Cell key={"cell-" + i} onClick={(() => {
+      cells.push(<Cell key={"cell-" + i} onClick={() => {
         this.toggleCell(i);
-      }).bind(this)} {...props} />);
+      }} {...props} />);
     }
 
     const style = {
