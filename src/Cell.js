@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { timingSafeEqual } from 'crypto';
 
 class Cell extends Component {
   render() {
